@@ -1,0 +1,5 @@
+# Presidium Messenger — rustfmt configuration (stable options only)
+max_width = 100
+reorder_imports = true
+reorder_modules = true
+match_block_trailing_comma = true

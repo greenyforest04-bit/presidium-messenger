@@ -1,0 +1,14 @@
+# Presidium Messenger — clippy configuration
+# See: https://doc.rust-lang.org/clippy/configuration.html
+
+# Pedantic and nursery are enabled at workspace level in Cargo.toml
+# Additional cognitive complexity threshold
+cognitive-complexity-threshold = 25
+
+# Disallow certain methods
+disallowed-methods = [
+    { path = "std::panic::panic_any", reason = "use proper error handling with Result" },
+]
+
+# MSRV check
+msrv = "1.81"
