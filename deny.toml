@@ -11,9 +11,8 @@ targets = [
 ]
 
 [advisories]
-severity-threshold = "medium"
 yanked = "deny"
-# unmaintained = "warn"  # optional: warn on unmaintained crates
+unmaintained = "warn"
 
 [licenses]
 allow = [
@@ -27,9 +26,6 @@ allow = [
     "Zlib",
     "OpenSSL",
 ]
-# Unlicensed crates are denied by default when not in allow list.
-# Copyleft licenses (AGPL, LGPL, GPL, MPL) are denied by default
-# because they are not listed above in `allow`.
 
 [bans]
 multiple-versions = "warn"
