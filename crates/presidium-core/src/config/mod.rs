@@ -120,7 +120,7 @@ impl AppConfig {
     ///
     /// Returns an error if configuration parsing fails or required
     /// fields are missing from all sources.
-    pub fn load() -> Result<Self, config::ConfigError> {
+    pub fn load() -> Result<Self, Box<figment::Error>> {
         Self::load_from(PathBuf::from("presidium.toml"))
     }
 
@@ -129,18 +129,15 @@ impl AppConfig {
     /// # Errors
     ///
     /// Returns an error if the file cannot be read or parsed.
-    pub fn load_from(path: PathBuf) -> Result<Self, config::ConfigError> {
+    pub fn load_from(path: PathBuf) -> Result<Self, Box<figment::Error>> {
         use figment::{providers::Env, providers::Format, providers::Toml, Figment};
 
         Figment::new()
             .merge(Toml::file(path))
             .merge(Env::prefixed("PRESIDIUM_").split("__"))
             .extract()
+            .map_err(Box::new)
     }
-}
-
-mod config {
-    pub use figment::Error as ConfigError;
 }
 
 // Default value functions for serde defaults
@@ -148,11 +145,11 @@ fn default_listen_addr() -> String {
     "/ip4/0.0.0.0/tcp/0".to_string()
 }
 
-fn default_true() -> bool {
+const fn default_true() -> bool {
     true
 }
 
-fn default_max_relay_connections() -> usize {
+const fn default_max_relay_connections() -> usize {
     16
 }
 
@@ -160,7 +157,7 @@ fn default_db_path() -> PathBuf {
     PathBuf::from("./data/presidium.db")
 }
 
-fn default_max_db_size_mb() -> usize {
+const fn default_max_db_size_mb() -> usize {
     512
 }
 

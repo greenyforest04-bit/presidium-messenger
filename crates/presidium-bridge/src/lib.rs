@@ -3,13 +3,13 @@
 //! Foreign Function Interface (FFI) bridge for platform interop.
 //!
 //! This crate provides bindings for:
-//! - **Android**: Kotlin Multiplatform via UniFFI
-//! - **iOS**: Swift via UniFFI
+//! - **Android**: Kotlin Multiplatform via `UniFFI`
+//! - **iOS**: Swift via `UniFFI`
 //! - **Desktop**: C ABI / WASM
 //!
 //! ## Status
 //!
-//! Day 1 placeholder — UniFFI bindings will be generated once
+//! Day 1 placeholder — `UniFFI` bindings will be generated once
 //! the core domain API stabilizes (after Day 7–10).
 //!
 //! ## Architecture
@@ -20,21 +20,17 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
-/// Placeholder — UniFFI bindings will be generated here.
+/// Placeholder — `UniFFI` bindings will be generated here.
 ///
 /// This module will contain the generated bindings for:
 /// - Android (Kotlin)
 /// - iOS (Swift)
 /// - Desktop (C ABI)
 pub mod generated {
-    //! Generated UniFFI bindings (placeholder for Day 1).
-    //!
-    //! In subsequent development days, this will be populated by
-    //! the `uniffi-bindgen` tool from the `presidium-core` API surface.
 
     /// Information about the Presidium runtime version.
     #[must_use]
-    pub fn runtime_version() -> &'static str {
+    pub const fn runtime_version() -> &'static str {
         env!("CARGO_PKG_VERSION")
     }
 }

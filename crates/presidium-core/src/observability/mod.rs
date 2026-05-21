@@ -36,9 +36,7 @@ pub fn init_tracing() {
     let filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("presidium=debug,tower_http=debug"));
 
-    let use_json = std::env::var("PRESIDIUM_JSON_LOGS")
-        .map(|v| v == "true" || v == "1")
-        .unwrap_or(false);
+    let use_json = std::env::var("PRESIDIUM_JSON_LOGS").is_ok_and(|v| v == "true" || v == "1");
 
     if use_json {
         tracing_subscriber::registry()

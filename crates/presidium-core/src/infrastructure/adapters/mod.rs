@@ -59,8 +59,10 @@ impl CryptoPort for StubCryptoAdapter {
         _bundle: &PreKeyBundle,
     ) -> Result<SessionId, DomainError> {
         let session_id = SessionId::new(format!("stub-session-{}", remote_user.to_hex()));
-        let mut sessions = self.sessions.write().await;
-        sessions.insert(remote_user.to_hex(), session_id.clone());
+        self.sessions
+            .write()
+            .await
+            .insert(remote_user.to_hex(), session_id.clone());
         Ok(session_id)
     }
 
@@ -83,8 +85,7 @@ impl CryptoPort for StubCryptoAdapter {
     }
 
     async fn close_session(&self, session_id: &SessionId) -> Result<(), DomainError> {
-        let mut sessions = self.sessions.write().await;
-        sessions.retain(|_, v| v != session_id);
+        self.sessions.write().await.retain(|_, v| v != session_id);
         Ok(())
     }
 }
@@ -116,8 +117,10 @@ impl Default for StubTransportAdapter {
 #[async_trait]
 impl MessageTransportPort for StubTransportAdapter {
     async fn send(&self, recipient: &UserId, payload: &[u8]) -> Result<(), DomainError> {
-        let mut inbox = self.inbox.write().await;
-        inbox.push((recipient.clone(), payload.to_vec()));
+        self.inbox
+            .write()
+            .await
+            .push((recipient.clone(), payload.to_vec()));
         tracing::debug!(target: "presidium::transport", "stub: queued message for {}", recipient);
         Ok(())
     }
@@ -158,8 +161,7 @@ impl Default for StubStorageAdapter {
 #[async_trait]
 impl StoragePort for StubStorageAdapter {
     async fn store_message(&self, message: &Message) -> Result<(), DomainError> {
-        let mut messages = self.messages.write().await;
-        messages.push(message.clone());
+        self.messages.write().await.push(message.clone());
         Ok(())
     }
 
@@ -176,8 +178,10 @@ impl StoragePort for StubStorageAdapter {
         &self,
         session_id: &SessionId,
     ) -> Result<Vec<Message>, DomainError> {
-        let messages = self.messages.read().await;
-        let mut result: Vec<Message> = messages
+        let mut result: Vec<Message> = self
+            .messages
+            .read()
+            .await
             .iter()
             .filter(|m| m.session_id == *session_id)
             .cloned()
@@ -187,8 +191,7 @@ impl StoragePort for StubStorageAdapter {
     }
 
     async fn store_event(&self, event: &DomainEvent) -> Result<(), DomainError> {
-        let mut events = self.events.write().await;
-        events.push(event.clone());
+        self.events.write().await.push(event.clone());
         Ok(())
     }
 }

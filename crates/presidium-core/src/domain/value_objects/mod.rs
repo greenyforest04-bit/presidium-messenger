@@ -59,7 +59,11 @@ impl KeyFingerprint {
     /// Returns a hexadecimal representation.
     #[must_use]
     pub fn to_hex(&self) -> String {
-        self.0.iter().map(|b| format!("{b:02x}")).collect()
+        self.0.iter().fold(String::new(), |mut acc, b| {
+            use std::fmt::Write;
+            let _ = write!(acc, "{b:02x}");
+            acc
+        })
     }
 }
 

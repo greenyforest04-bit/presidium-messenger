@@ -48,10 +48,7 @@ impl CryptoPort for DevCryptoAdapter {
         {
             let mut identity = self.identity.write().await;
             if identity.is_none() {
-                *identity = Some(IdentityKeyPair {
-                    public_key: kp.public_key,
-                    private_key: kp.private_key,
-                });
+                *identity = Some(kp.clone());
             }
         }
 
@@ -70,8 +67,10 @@ impl CryptoPort for DevCryptoAdapter {
         _bundle: &PreKeyBundle,
     ) -> Result<SessionId, DomainError> {
         let session_id = SessionId::new(format!("crypto-session-{}", remote_user.to_hex()));
-        let mut sessions = self.sessions.write().await;
-        sessions.insert(remote_user.to_hex(), session_id.clone());
+        self.sessions
+            .write()
+            .await
+            .insert(remote_user.to_hex(), session_id.clone());
         tracing::info!(
             target: "presidium::crypto",
             session_id = %session_id,
@@ -99,8 +98,7 @@ impl CryptoPort for DevCryptoAdapter {
     }
 
     async fn close_session(&self, session_id: &SessionId) -> Result<(), DomainError> {
-        let mut sessions = self.sessions.write().await;
-        sessions.retain(|_, v| v != session_id);
+        self.sessions.write().await.retain(|_, v| v != session_id);
         Ok(())
     }
 }

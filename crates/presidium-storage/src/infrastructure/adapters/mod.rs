@@ -61,8 +61,10 @@ impl Default for InMemoryStorageAdapter {
 #[async_trait]
 impl StoragePort for InMemoryStorageAdapter {
     async fn store_message(&self, message: &Message) -> Result<(), DomainError> {
-        let mut messages = self.messages.write().await;
-        messages.insert(message.id.clone(), message.clone());
+        self.messages
+            .write()
+            .await
+            .insert(message.id.clone(), message.clone());
         Ok(())
     }
 
@@ -78,8 +80,10 @@ impl StoragePort for InMemoryStorageAdapter {
         &self,
         session_id: &SessionId,
     ) -> Result<Vec<Message>, DomainError> {
-        let messages = self.messages.read().await;
-        let mut result: Vec<Message> = messages
+        let mut result: Vec<Message> = self
+            .messages
+            .read()
+            .await
             .values()
             .filter(|m| m.session_id == *session_id)
             .cloned()
@@ -89,8 +93,7 @@ impl StoragePort for InMemoryStorageAdapter {
     }
 
     async fn store_event(&self, event: &DomainEvent) -> Result<(), DomainError> {
-        let mut events = self.events.write().await;
-        events.push(event.clone());
+        self.events.write().await.push(event.clone());
         Ok(())
     }
 }
@@ -117,19 +120,22 @@ impl ExtendedStoragePort for InMemoryStorageAdapter {
             message_count: 0,
         };
         conversations.insert(key, conv.clone());
+        drop(conversations);
         Ok(conv)
     }
 
     async fn list_conversations(&self) -> Result<Vec<Conversation>, DomainError> {
-        let conversations = self.conversations.read().await;
-        let mut result: Vec<Conversation> = conversations.values().cloned().collect();
-        result.sort_by(|a, b| b.last_activity_ms.cmp(&a.last_activity_ms));
+        let mut result: Vec<Conversation> =
+            self.conversations.read().await.values().cloned().collect();
+        result.sort_by_key(|b| std::cmp::Reverse(b.last_activity_ms));
         Ok(result)
     }
 
     async fn save_contact(&self, contact: &Contact) -> Result<(), DomainError> {
-        let mut contacts = self.contacts.write().await;
-        contacts.insert(contact.user_id.to_hex(), contact.clone());
+        self.contacts
+            .write()
+            .await
+            .insert(contact.user_id.to_hex(), contact.clone());
         Ok(())
     }
 
@@ -139,8 +145,7 @@ impl ExtendedStoragePort for InMemoryStorageAdapter {
     }
 
     async fn delete_conversation(&self, conversation_id: &str) -> Result<(), DomainError> {
-        let mut conversations = self.conversations.write().await;
-        conversations.remove(conversation_id);
+        self.conversations.write().await.remove(conversation_id);
         Ok(())
     }
 }

@@ -34,8 +34,7 @@ impl Default for StubLlmAdapter {
 #[async_trait]
 impl ModelManagerPort for StubLlmAdapter {
     async fn load_model(&self, path: &str) -> Result<ModelInfo, DomainError> {
-        let mut loaded = self.loaded.write().await;
-        *loaded = true;
+        *self.loaded.write().await = true;
         tracing::info!(target: "presidium::llm", path = path, "stub: model loaded");
         Ok(ModelInfo {
             name: "stub-model-2b".into(),
@@ -64,14 +63,14 @@ impl ModelManagerPort for StubLlmAdapter {
     }
 
     async fn unload_model(&self) -> Result<(), DomainError> {
-        let mut loaded = self.loaded.write().await;
-        *loaded = false;
+        *self.loaded.write().await = false;
         Ok(())
     }
 }
 
 #[async_trait]
 impl InferencePort for StubLlmAdapter {
+    #[allow(clippy::cast_possible_truncation)]
     async fn generate(&self, prompt: &str) -> Result<InferenceResult, DomainError> {
         Ok(InferenceResult {
             text: format!("[stub response to: {prompt}]"),

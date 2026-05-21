@@ -11,7 +11,7 @@
 //! ## Architecture
 //!
 //! Implements [`presidium_core::application::ports::StoragePort`]
-//! with concrete backends (SQLite planned for MVP).
+//! with concrete backends (`SQLite` planned for MVP).
 //!
 //! ## Security
 //!

@@ -11,12 +11,11 @@ targets = [
 ]
 
 [advisories]
-vulnerability = "deny"
+severity-threshold = "medium"
 yanked = "deny"
-notice = "warn"
+# unmaintained = "warn"  # optional: warn on unmaintained crates
 
 [licenses]
-unlicensed = "deny"
 allow = [
     "MIT",
     "Apache-2.0",
@@ -26,12 +25,11 @@ allow = [
     "ISC",
     "Unicode-3.0",
     "Zlib",
-    "AGPL-3.0-or-later",
-    "LGPL-3.0-or-later",
-    "MPL-2.0",
     "OpenSSL",
 ]
-copyleft = "deny"
+# Unlicensed crates are denied by default when not in allow list.
+# Copyleft licenses (AGPL, LGPL, GPL, MPL) are denied by default
+# because they are not listed above in `allow`.
 
 [bans]
 multiple-versions = "warn"

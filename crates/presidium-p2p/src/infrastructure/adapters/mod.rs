@@ -41,15 +41,13 @@ impl Default for StubP2pAdapter {
 #[async_trait]
 impl PeerDiscoveryPort for StubP2pAdapter {
     async fn start_listening(&self, _addr: &str) -> Result<(), DomainError> {
-        let mut listening = self.listening.write().await;
-        *listening = true;
+        *self.listening.write().await = true;
         tracing::info!(target: "presidium::p2p", "stub: started listening");
         Ok(())
     }
 
     async fn stop_listening(&self) -> Result<(), DomainError> {
-        let mut listening = self.listening.write().await;
-        *listening = false;
+        *self.listening.write().await = false;
         tracing::info!(target: "presidium::p2p", "stub: stopped listening");
         Ok(())
     }
@@ -70,13 +68,13 @@ impl PeerDiscoveryPort for StubP2pAdapter {
             last_seen_ms: 0,
         });
         peer.set_state(PeerState::Connected);
+        drop(peers);
         tracing::debug!(target: "presidium::p2p", "stub: connected to {}", user_id);
         Ok(PeerState::Connected)
     }
 
     async fn disconnect_from_peer(&self, user_id: &UserId) -> Result<(), DomainError> {
-        let mut peers = self.peers.write().await;
-        if let Some(peer) = peers.get_mut(&user_id.to_hex()) {
+        if let Some(peer) = self.peers.write().await.get_mut(&user_id.to_hex()) {
             peer.set_state(PeerState::Disconnected);
         }
         Ok(())

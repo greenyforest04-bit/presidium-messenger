@@ -57,7 +57,7 @@ pub enum DomainEvent {
 impl DomainEvent {
     /// Returns a human-readable label for this event type.
     #[must_use]
-    pub fn event_type(&self) -> &'static str {
+    pub const fn event_type(&self) -> &'static str {
         match self {
             Self::SessionEstablished { .. } => "session_established",
             Self::MessageQueued { .. } => "message_queued",

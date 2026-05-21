@@ -4,9 +4,9 @@
 //! 1. Validate the command
 //! 2. Moderate content via LLM
 //! 3. Create domain Message entity
-//! 4. Encrypt via CryptoPort
-//! 5. Store locally via StoragePort
-//! 6. Transport via MessageTransportPort
+//! 4. Encrypt via `CryptoPort`
+//! 5. Store locally via `StoragePort`
+//! 6. Transport via `MessageTransportPort`
 //! 7. Emit domain event
 
 use crate::domain::commands::SendMessageCommand;
@@ -124,15 +124,19 @@ fn uuid_placeholder() -> String {
     use rand::RngCore;
     let mut bytes = [0u8; 16];
     rand::rngs::OsRng.fill_bytes(&mut bytes);
-    bytes.iter().map(|b| format!("{b:02x}")).collect()
+    bytes.iter().fold(String::new(), |mut acc, b| {
+        use std::fmt::Write;
+        let _ = write!(acc, "{b:02x}");
+        acc
+    })
 }
 
 /// Returns the current Unix timestamp in milliseconds.
+#[allow(clippy::cast_possible_truncation)]
 fn current_timestamp_ms() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| d.as_millis() as u64)
-        .unwrap_or(0)
+        .map_or(0, |d| d.as_millis() as u64)
 }
 
 #[cfg(test)]

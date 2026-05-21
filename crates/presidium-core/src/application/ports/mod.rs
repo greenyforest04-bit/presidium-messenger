@@ -66,7 +66,7 @@ pub trait CryptoPort: Send + Sync {
 /// Port for message transport over the P2P network.
 ///
 /// Implementations handle the actual delivery of encrypted messages
-/// using the libp2p stack (GossipSub, direct messages, etc.).
+/// using the `libp2p` stack (`GossipSub`, direct messages, etc.).
 #[async_trait]
 pub trait MessageTransportPort: Send + Sync {
     /// Sends an encrypted payload to the specified recipient.
@@ -83,7 +83,7 @@ pub trait MessageTransportPort: Send + Sync {
 
 /// Port for persistent storage of messages, sessions, and state.
 ///
-/// Implementations may use SQLite, Sled, RocksDB, or any other
+/// Implementations may use `SQLite`, `Sled`, `RocksDB`, or any other
 /// storage backend suitable for the target platform.
 #[async_trait]
 pub trait StoragePort: Send + Sync {

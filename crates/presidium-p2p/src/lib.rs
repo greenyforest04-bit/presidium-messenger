@@ -5,7 +5,7 @@
 //! This crate wraps the `libp2p` stack and exposes a clean,
 //! domain-friendly API for:
 //! - Peer discovery (Kademlia DHT, mDNS)
-//! - Message routing (GossipSub, direct messages)
+//! - Message routing (`GossipSub`, direct messages)
 //! - NAT traversal (Circuit Relay v2, hole punching)
 //! - Transport protocols (QUIC, WebRTC)
 //!
