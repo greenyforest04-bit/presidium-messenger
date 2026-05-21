@@ -3,9 +3,9 @@
 //! Additional storage operations beyond the core [`presidium_core::application::ports::StoragePort`].
 
 use crate::domain::schema::{Contact, Conversation};
-use presidium_core::domain::errors::DomainError;
-use presidium_core::domain::entities::UserId;
 use async_trait::async_trait;
+use presidium_core::domain::entities::UserId;
+use presidium_core::domain::errors::DomainError;
 
 /// Extended storage operations for conversations and contacts.
 #[async_trait]

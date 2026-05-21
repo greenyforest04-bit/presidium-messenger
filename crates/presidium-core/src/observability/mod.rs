@@ -33,9 +33,8 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 /// }
 /// ```
 pub fn init_tracing() {
-    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| {
-        EnvFilter::new("presidium=debug,tower_http=debug")
-    });
+    let filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("presidium=debug,tower_http=debug"));
 
     let use_json = std::env::var("PRESIDIUM_JSON_LOGS")
         .map(|v| v == "true" || v == "1")

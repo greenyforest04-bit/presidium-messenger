@@ -9,6 +9,8 @@
 //! 6. Transport via MessageTransportPort
 //! 7. Emit domain event
 
+use crate::domain::commands::SendMessageCommand;
+use crate::domain::dtos::MessageSentResponse;
 use presidium_core::application::ports::{
     CryptoPort, MessageTransportPort, ModerationPort, StoragePort,
 };
@@ -16,8 +18,6 @@ use presidium_core::domain::entities::{Message, SessionId};
 use presidium_core::domain::errors::DomainError;
 use presidium_core::domain::events::DomainEvent;
 use presidium_core::domain::value_objects::ModerationResult;
-use crate::domain::commands::SendMessageCommand;
-use crate::domain::dtos::MessageSentResponse;
 
 /// Executes the send message use case.
 ///
@@ -40,7 +40,9 @@ pub async fn execute_send_message(
 ) -> Result<MessageSentResponse, DomainError> {
     // Step 1: Validate content is not empty
     if command.content.trim().is_empty() {
-        return Err(DomainError::InvalidMessage("message content is empty".into()));
+        return Err(DomainError::InvalidMessage(
+            "message content is empty".into(),
+        ));
     }
 
     // Self-message check
@@ -157,15 +159,9 @@ mod tests {
         let storage = StubStorageAdapter::new();
         let moderation = StubModerationAdapter::new();
 
-        let response = execute_send_message(
-            cmd,
-            &crypto,
-            &transport,
-            &storage,
-            &moderation,
-        )
-        .await
-        .expect("send message");
+        let response = execute_send_message(cmd, &crypto, &transport, &storage, &moderation)
+            .await
+            .expect("send message");
 
         assert!(!response.message_id.is_empty());
         assert!(response.delivered_immediately);
@@ -188,7 +184,7 @@ mod tests {
         match result.unwrap_err() {
             DomainError::InvalidMessage(msg) => {
                 assert!(msg.contains("empty"));
-            }
+            },
             other => panic!("expected InvalidMessage, got: {other}"),
         }
     }

@@ -6,7 +6,9 @@
 //! from Day 1. Real implementations will replace these as each
 //! subsystem (crypto, p2p, storage, llm) is developed.
 
-use crate::application::ports::{CryptoPort, MessageTransportPort, ModerationPort, PreKeyBundle, StoragePort};
+use crate::application::ports::{
+    CryptoPort, MessageTransportPort, ModerationPort, PreKeyBundle, StoragePort,
+};
 use crate::domain::entities::{Message, SessionId, UserId};
 use crate::domain::errors::DomainError;
 use crate::domain::events::DomainEvent;
@@ -122,7 +124,9 @@ impl MessageTransportPort for StubTransportAdapter {
 
     async fn receive(&self) -> Result<(UserId, Vec<u8>), DomainError> {
         let mut inbox = self.inbox.write().await;
-        inbox.pop().ok_or_else(|| DomainError::ResourceUnavailable("no messages in stub inbox".into()))
+        inbox
+            .pop()
+            .ok_or_else(|| DomainError::ResourceUnavailable("no messages in stub inbox".into()))
     }
 }
 
@@ -168,7 +172,10 @@ impl StoragePort for StubStorageAdapter {
             .ok_or_else(|| DomainError::MessageNotFound(message_id.to_string()))
     }
 
-    async fn get_session_messages(&self, session_id: &SessionId) -> Result<Vec<Message>, DomainError> {
+    async fn get_session_messages(
+        &self,
+        session_id: &SessionId,
+    ) -> Result<Vec<Message>, DomainError> {
         let messages = self.messages.read().await;
         let mut result: Vec<Message> = messages
             .iter()
@@ -220,10 +227,22 @@ mod tests {
     async fn test_stub_crypto_adapter_lifecycle() {
         let adapter = StubCryptoAdapter::new();
         let user = UserId::new([5u8; 32]);
-        let bundle = adapter.create_pre_key_bundle().await.expect("create bundle");
-        let session = adapter.establish_session(&user, &bundle).await.expect("establish");
-        let encrypted = adapter.encrypt_message(&session, b"test").await.expect("encrypt");
-        let decrypted = adapter.decrypt_message(&session, &encrypted).await.expect("decrypt");
+        let bundle = adapter
+            .create_pre_key_bundle()
+            .await
+            .expect("create bundle");
+        let session = adapter
+            .establish_session(&user, &bundle)
+            .await
+            .expect("establish");
+        let encrypted = adapter
+            .encrypt_message(&session, b"test")
+            .await
+            .expect("encrypt");
+        let decrypted = adapter
+            .decrypt_message(&session, &encrypted)
+            .await
+            .expect("decrypt");
         assert_eq!(decrypted, b"test");
         adapter.close_session(&session).await.expect("close");
     }
@@ -250,7 +269,10 @@ mod tests {
         let retrieved = adapter.get_message("m1").await.expect("retrieve");
         assert_eq!(retrieved.content, "hello");
 
-        let session_msgs = adapter.get_session_messages(&session).await.expect("session msgs");
+        let session_msgs = adapter
+            .get_session_messages(&session)
+            .await
+            .expect("session msgs");
         assert_eq!(session_msgs.len(), 1);
     }
 

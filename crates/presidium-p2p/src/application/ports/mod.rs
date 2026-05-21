@@ -2,11 +2,11 @@
 //!
 //! Extended port traits specific to the P2P subsystem.
 
-use presidium_core::domain::errors::DomainError;
 use crate::domain::peer::{Peer, PeerState};
-use presidium_core::domain::entities::UserId;
-use presidium_core::domain::value_objects::Multiaddr;
 use async_trait::async_trait;
+use presidium_core::domain::entities::UserId;
+use presidium_core::domain::errors::DomainError;
+use presidium_core::domain::value_objects::Multiaddr;
 
 /// Port for peer discovery and management.
 #[async_trait]
@@ -44,7 +44,7 @@ pub trait DhtPort: Send + Sync {
 mod tests {
     // Port trait definitions — compilation test only
     fn _assert_send_sync<T: Send + Sync>() {}
-    
+
     #[test]
     fn test_port_traits_are_object_safe() {
         // Verify the traits can be used as trait objects

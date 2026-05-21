@@ -185,7 +185,10 @@ mod tests {
     #[tokio::test]
     async fn test_mock_crypto_port_roundtrip() {
         let crypto = MockCryptoPort;
-        let bundle = crypto.create_pre_key_bundle().await.expect("bundle creation");
+        let bundle = crypto
+            .create_pre_key_bundle()
+            .await
+            .expect("bundle creation");
         assert_eq!(bundle.identity_key.len(), 32);
 
         let user = UserId::new([1u8; 32]);
@@ -196,8 +199,14 @@ mod tests {
         assert_eq!(session.0, "test-session");
 
         let plaintext = b"hello presidium";
-        let ciphertext = crypto.encrypt_message(&session, plaintext).await.expect("encrypt");
-        let decrypted = crypto.decrypt_message(&session, &ciphertext).await.expect("decrypt");
+        let ciphertext = crypto
+            .encrypt_message(&session, plaintext)
+            .await
+            .expect("encrypt");
+        let decrypted = crypto
+            .decrypt_message(&session, &ciphertext)
+            .await
+            .expect("decrypt");
         assert_eq!(decrypted, plaintext);
 
         crypto.close_session(&session).await.expect("close session");

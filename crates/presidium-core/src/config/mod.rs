@@ -130,7 +130,7 @@ impl AppConfig {
     ///
     /// Returns an error if the file cannot be read or parsed.
     pub fn load_from(path: PathBuf) -> Result<Self, config::ConfigError> {
-        use figment::{Figment, providers::Format, providers::Toml, providers::Env};
+        use figment::{providers::Env, providers::Format, providers::Toml, Figment};
 
         Figment::new()
             .merge(Toml::file(path))

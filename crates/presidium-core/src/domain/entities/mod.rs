@@ -140,7 +140,15 @@ mod tests {
         let sender = UserId::new([1u8; 32]);
         let recipient = UserId::new([2u8; 32]);
         let session = SessionId::new("test-session");
-        let msg = Message::new("msg-1", sender.clone(), recipient, session, "Hello", 1000, 0);
+        let msg = Message::new(
+            "msg-1",
+            sender.clone(),
+            recipient,
+            session,
+            "Hello",
+            1000,
+            0,
+        );
         assert_eq!(msg.id, "msg-1");
         assert_eq!(msg.sender_id, sender);
         assert_eq!(msg.sequence, 0);

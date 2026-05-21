@@ -2,12 +2,12 @@
 //!
 //! Stub implementations of P2P ports for development.
 
-use presidium_core::domain::errors::DomainError;
 use crate::application::ports::{DhtPort, PeerDiscoveryPort};
 use crate::domain::peer::{Peer, PeerState};
-use presidium_core::domain::entities::UserId;
-use presidium_core::domain::value_objects::Multiaddr;
 use async_trait::async_trait;
+use presidium_core::domain::entities::UserId;
+use presidium_core::domain::errors::DomainError;
+use presidium_core::domain::value_objects::Multiaddr;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 
@@ -106,7 +106,10 @@ mod tests {
     #[tokio::test]
     async fn test_stub_p2p_lifecycle() {
         let adapter = StubP2pAdapter::new();
-        adapter.start_listening("/ip4/0.0.0.0/tcp/0").await.expect("listen");
+        adapter
+            .start_listening("/ip4/0.0.0.0/tcp/0")
+            .await
+            .expect("listen");
 
         let user = UserId::new([1u8; 32]);
         let state = adapter.connect_to_peer(&user).await.expect("connect");
@@ -115,7 +118,10 @@ mod tests {
         let peers = adapter.list_peers().await.expect("list");
         assert_eq!(peers.len(), 1);
 
-        adapter.disconnect_from_peer(&user).await.expect("disconnect");
+        adapter
+            .disconnect_from_peer(&user)
+            .await
+            .expect("disconnect");
         adapter.stop_listening().await.expect("stop");
     }
 

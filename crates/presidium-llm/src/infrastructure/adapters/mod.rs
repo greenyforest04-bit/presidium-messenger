@@ -5,8 +5,8 @@
 use crate::application::ports::{InferencePort, ModelManagerPort};
 use crate::domain::inference::{InferenceResult, ModerationAnalysis};
 use crate::domain::model::{ModelCapability, ModelInfo, Quantization};
-use presidium_core::domain::errors::DomainError;
 use async_trait::async_trait;
+use presidium_core::domain::errors::DomainError;
 use tokio::sync::RwLock;
 
 /// Stub LLM adapter that simulates inference without a real model.
@@ -116,7 +116,10 @@ mod tests {
         assert!(!result.text.is_empty());
 
         // Moderate content
-        let analysis = adapter.moderate("innocent message").await.expect("moderate");
+        let analysis = adapter
+            .moderate("innocent message")
+            .await
+            .expect("moderate");
         assert_eq!(analysis.result, ModerationResult::Safe);
 
         // Unload

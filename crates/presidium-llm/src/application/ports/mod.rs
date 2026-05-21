@@ -4,8 +4,8 @@
 
 use crate::domain::inference::{InferenceResult, ModerationAnalysis};
 use crate::domain::model::ModelInfo;
-use presidium_core::domain::errors::DomainError;
 use async_trait::async_trait;
+use presidium_core::domain::errors::DomainError;
 
 /// Port for LLM model loading and management.
 #[async_trait]

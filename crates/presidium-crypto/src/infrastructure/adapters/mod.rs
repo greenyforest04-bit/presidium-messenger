@@ -5,11 +5,11 @@
 
 use crate::application::generate_keys::generate_identity_keypair;
 use crate::domain::keypair::IdentityKeyPair;
-use crate::domain::pre_key::{SignedPreKey, to_pre_key_bundle};
+use crate::domain::pre_key::{to_pre_key_bundle, SignedPreKey};
+use async_trait::async_trait;
 use presidium_core::application::ports::{CryptoPort, PreKeyBundle};
 use presidium_core::domain::entities::{SessionId, UserId};
 use presidium_core::domain::errors::DomainError;
-use async_trait::async_trait;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 
@@ -113,12 +113,24 @@ mod tests {
     async fn test_dev_crypto_adapter_lifecycle() {
         let adapter = DevCryptoAdapter::new();
         let user = UserId::new([7u8; 32]);
-        let bundle = adapter.create_pre_key_bundle().await.expect("create bundle");
+        let bundle = adapter
+            .create_pre_key_bundle()
+            .await
+            .expect("create bundle");
         assert_eq!(bundle.identity_key.len(), 32);
 
-        let session = adapter.establish_session(&user, &bundle).await.expect("session");
-        let encrypted = adapter.encrypt_message(&session, b"hello").await.expect("encrypt");
-        let decrypted = adapter.decrypt_message(&session, &encrypted).await.expect("decrypt");
+        let session = adapter
+            .establish_session(&user, &bundle)
+            .await
+            .expect("session");
+        let encrypted = adapter
+            .encrypt_message(&session, b"hello")
+            .await
+            .expect("encrypt");
+        let decrypted = adapter
+            .decrypt_message(&session, &encrypted)
+            .await
+            .expect("decrypt");
         assert_eq!(decrypted, b"hello");
 
         adapter.close_session(&session).await.expect("close");

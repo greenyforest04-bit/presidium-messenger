@@ -12,7 +12,6 @@ targets = [
 
 [advisories]
 vulnerability = "deny"
-unmaintained = "warn"
 yanked = "deny"
 notice = "warn"
 
@@ -37,7 +36,6 @@ copyleft = "deny"
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
-workspace-dependencies-deny = true
 
 [sources]
 unknown-registry = "deny"

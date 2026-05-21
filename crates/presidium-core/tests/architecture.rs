@@ -8,7 +8,9 @@
 //! import anything from `infrastructure/` or external crates
 //! (except `serde` for serialization of domain types).
 
-use presidium_core::application::ports::{CryptoPort, MessageTransportPort, ModerationPort, StoragePort};
+use presidium_core::application::ports::{
+    CryptoPort, MessageTransportPort, ModerationPort, StoragePort,
+};
 use presidium_core::config::AppConfig;
 use presidium_core::domain::entities::{Message, SessionId, UserId};
 use presidium_core::domain::errors::DomainError;

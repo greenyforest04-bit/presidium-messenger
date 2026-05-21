@@ -4,11 +4,11 @@
 
 use crate::application::ports::ExtendedStoragePort;
 use crate::domain::schema::{Contact, Conversation};
+use async_trait::async_trait;
 use presidium_core::application::ports::StoragePort;
 use presidium_core::domain::entities::{Message, SessionId, UserId};
 use presidium_core::domain::errors::DomainError;
 use presidium_core::domain::events::DomainEvent;
-use async_trait::async_trait;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
 
@@ -74,7 +74,10 @@ impl StoragePort for InMemoryStorageAdapter {
             .ok_or_else(|| DomainError::MessageNotFound(message_id.to_string()))
     }
 
-    async fn get_session_messages(&self, session_id: &SessionId) -> Result<Vec<Message>, DomainError> {
+    async fn get_session_messages(
+        &self,
+        session_id: &SessionId,
+    ) -> Result<Vec<Message>, DomainError> {
         let messages = self.messages.read().await;
         let mut result: Vec<Message> = messages
             .values()
@@ -165,11 +168,17 @@ mod tests {
         let user1 = UserId::new([1u8; 32]);
         let user2 = UserId::new([2u8; 32]);
 
-        let conv = adapter.get_or_create_conversation(&user1, &user2).await.expect("create");
+        let conv = adapter
+            .get_or_create_conversation(&user1, &user2)
+            .await
+            .expect("create");
         assert_eq!(conv.message_count, 0);
 
         // Calling again should return the same conversation
-        let conv2 = adapter.get_or_create_conversation(&user1, &user2).await.expect("get");
+        let conv2 = adapter
+            .get_or_create_conversation(&user1, &user2)
+            .await
+            .expect("get");
         assert_eq!(conv.id, conv2.id);
 
         let list = adapter.list_conversations().await.expect("list");
@@ -202,7 +211,10 @@ mod tests {
         let user1 = UserId::new([1u8; 32]);
         let user2 = UserId::new([2u8; 32]);
 
-        let conv = adapter.get_or_create_conversation(&user1, &user2).await.expect("create");
+        let conv = adapter
+            .get_or_create_conversation(&user1, &user2)
+            .await
+            .expect("create");
         adapter.delete_conversation(&conv.id).await.expect("delete");
 
         let list = adapter.list_conversations().await.expect("list");
