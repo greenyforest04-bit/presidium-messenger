@@ -1,5 +1,6 @@
 # Presidium Messenger — cargo-deny configuration
 # See: https://embarkstudios.github.io/cargo-deny/
+# Version: cargo-deny 0.19.6
 
 [graph]
 targets = [
@@ -12,7 +13,7 @@ targets = [
 
 [advisories]
 yanked = "deny"
-unmaintained = "warn"
+unmaintained = "workspace"
 
 [licenses]
 allow = [
