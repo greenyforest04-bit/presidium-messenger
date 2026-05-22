@@ -2,16 +2,12 @@
 all-features = true
 
 [output]
-deny = ["advisories", "licenses", "bans", "sources"]
-warn = []
-skip = []
 feature-depth = 1
 
 [advisories]
 db-path = "~/.cargo/advisory-db"
-vulnerability = "deny"
-unmaintained = "warn"
-unsound = "warn"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+ignore = []
 
 [licenses]
 allow = [
@@ -27,23 +23,20 @@ allow = [
     "Unicode-3.0",
     "AGPL-3.0-or-later",
 ]
-unlicensed = "deny"
-allow-osi-fsf-free = "neither"
-default = "deny"
-copyleft = "warn"
+confidence-threshold = 0.8
 
 [licenses.private]
 ignore = true
 
 [bans]
 multiple-versions = "warn"
-wildcards = "deny"
-allow-wildcard-paths = true
+wildcards = "warn"
 
 [sources]
 unknown-registry = "deny"
 unknown-git = "deny"
 allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
 
 [sources.allow-org]
-github = ["StepanBorodulin"]
+github = ["greenyforest04-bit"]
