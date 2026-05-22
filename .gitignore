@@ -1,8 +1,1 @@
-/target/
-**/*.rs.bk
-*.pdb
-*.dll
-*.so
-*.dylib
-*.rlib
-*.exe
+target/

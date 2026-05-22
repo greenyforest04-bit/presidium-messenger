@@ -1,5 +1,6 @@
 # Presidium Messenger
 
+<<<<<<< HEAD
 Decentralized, end-to-end encrypted (E2EE) peer-to-peer messenger of the next generation.
 
 ## Overview
@@ -88,3 +89,47 @@ See [`docs/project-status.md`](docs/project-status.md) for the current developme
 ## License
 
 AGPL-3.0-or-later — see [LICENSE](LICENSE) for details.
+=======
+> Decentralized, End-to-End Encrypted, Peer-to-Peer messenger with on-device LLM moderation
+
+## Architecture
+
+The project follows **Clean Architecture** with **Hexagonal (Ports & Adapters)** pattern and **Domain-Driven Design** principles.
+
+### Layer Organization (per crate)
+
+```
+src/
+├── domain/               # Entities, value objects, aggregates, events, errors
+├── application/          # Use cases (interactors), port traits, services
+├── infrastructure/       # Concrete adapter implementations, DI factory
+└── interfaces/           # FFI, HTTP, CLI entry points (optional)
+```
+
+**Dependency Rule**: dependencies point inward only. `domain` has zero external dependencies. `application` depends on `domain`. `infrastructure` depends on `application` and `domain`.
+
+### Workspace Crates
+
+| Crate | Purpose |
+|-------|---------|
+| `presidium-core` | Shared domain types, ModerationPort, domain events |
+| `presidium-crypto` | E2EE port (PQXDH + Double Ratchet) |
+| `presidium-p2p` | P2P networking port (libp2p) |
+| `presidium-storage` | Message storage port (redb) |
+| `presidium-llm` | On-device LLM inference port (candle.rs) |
+| `presidium-messaging` | Use cases and orchestration |
+| `presidium-bridge` | UniFFI bindings for Kotlin Multiplatform |
+
+## Development
+
+```bash
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+./scripts/check_layer_deps.sh
+```
+
+## License
+
+AGPL-3.0-or-later
+>>>>>>> 9073fbc (feat(architecture): implement clean architecture layers with SendMessageUseCase)

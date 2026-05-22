@@ -1,80 +1,29 @@
-# Presidium Messenger — Cargo Workspace
-# Decentralized E2EE P2P Messenger next generation
-
 [workspace]
-members = [
-    "crates/presidium-core",
-    "crates/presidium-crypto",
-    "crates/presidium-p2p",
-    "crates/presidium-storage",
-    "crates/presidium-llm",
-    "crates/presidium-messaging",
-    "crates/presidium-bridge",
-]
 resolver = "2"
+members = [
+    "presidium-core",
+    "presidium-crypto",
+    "presidium-p2p",
+    "presidium-storage",
+    "presidium-llm",
+    "presidium-messaging",
+    "presidium-bridge",
+]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.81"
-authors = ["Presidium Team"]
 license = "AGPL-3.0-or-later"
-repository = "https://github.com/greenyforest04-bit/presidium-messenger"
-description = "Decentralized E2EE P2P Messenger next generation"
+repository = "https://github.com/StepanBorodulin/presidium-messenger"
 
 [workspace.dependencies]
-# Async runtime
-tokio = { version = "1", features = ["full"] }
 async-trait = "0.1"
-
-# Serialization
+thiserror = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-
-# Error handling
-thiserror = "2"
-anyhow = "1"
-
-# Observability
+uuid = { version = "1", features = ["v4", "serde"] }
 tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
-
-# Configuration
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 figment = { version = "0.10", features = ["toml", "env"] }
-
-# Cryptography (foundational — adapters will use concrete implementations)
-x25519-dalek = { version = "2", features = ["static_secrets"] }
-ed25519-dalek = { version = "2", features = ["rand_core"] }
-rand = "0.8"
-rand_core = "0.6"
-
-# Testing
-proptest = "1"
+tokio = { version = "1", features = ["full"] }
 mockall = "0.13"
-
-# Serialization (testing)
-toml = "0.8"
-
-[workspace.lints.rust]
-unsafe_code = "forbid"
-missing_docs = "warn"
-
-[workspace.lints.clippy]
-pedantic = { level = "warn", priority = -1 }
-nursery = { level = "warn", priority = -1 }
-unwrap_used = "deny"
-expect_used = "deny"
-
-[profile.release]
-lto = "fat"
-codegen-units = 1
-strip = "debuginfo"
-opt-level = 3
-
-[profile.dev]
-opt-level = 0
-debug = true
-
-[profile.test]
-opt-level = 1
-debug = true

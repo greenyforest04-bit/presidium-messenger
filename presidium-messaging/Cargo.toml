@@ -1,0 +1,18 @@
+[package]
+name = "presidium-messaging"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+presidium-core = { path = "../presidium-core" }
+presidium-crypto = { path = "../presidium-crypto" }
+presidium-p2p = { path = "../presidium-p2p" }
+presidium-storage = { path = "../presidium-storage" }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+
+[dev-dependencies]
+mockall = { workspace = true }
+tokio = { workspace = true }
